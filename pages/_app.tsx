@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import TranscriptAndChat from '@/components/transcript-and-chat'
 import '../src/styles/globals.css' // Tailwind CSS
-import { createDbFromYoutubeVideoUrl } from '@/utils'
 
 const App = () => {
   const [youtubeUrl, setYoutubeUrl] = useState<string>('')
@@ -50,19 +49,15 @@ const App = () => {
   }
 
   return (
-    <div className='flex flex-col h-screen bg-background text-text'>
-      <header className='px-4 py-2 bg-primary text-white'>
-        <h1 className='font-header text-2xl'>YouTube Summarizer</h1>
+    <div className="flex flex-col h-screen bg-background text-text">
+      <header className="px-4 py-2 bg-primary text-white">
+        <h1 className="font-header text-2xl text-center">YouTube Summarizer</h1>
       </header>
 
-      <div className='flex flex-1 overflow-hidden'>
-        {/* Sidebar */}
-        <aside className='hidden lg:block lg:w-60 xl:w-80 p-4 overflow-auto'>
-          {/* Sidebar Content */}
-        </aside>
+      <div className='flex flex-col flex-1 overflow-hidden gap-8 p-4'>
 
         <main className='flex flex-col flex-1 p-4 overflow-hidden'>
-          <div className='flex flex-col md:flex-row gap-4 mb-4'>
+          <div className='flex flex-col md:flex-row gap-20 mb-4'>
             <input
               type='text'
               value={youtubeUrl}
