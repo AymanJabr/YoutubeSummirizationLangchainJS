@@ -5,9 +5,10 @@ import { createDbFromYoutubeVideoUrl, getResponseFromQuery } from './utils'
 async function testCreateDbFromYoutubeVideoUrl() {
   try {
     // Replace 'video url' with the actual YouTube video URL you want to test
-    const db = await createDbFromYoutubeVideoUrl(
+    const [db, info] = await createDbFromYoutubeVideoUrl(
       'https://www.youtube.com/watch?v=yIQ4vtTrR7E&ab_channel=DrWaku'
     )
+    console.log("info:", info[0].pageContent)
     return db
   } catch (error) {
     console.error('Error creating database from YouTube video:', error)
@@ -22,7 +23,7 @@ async function testGetResponseFromQuery(
   openAIApiKey: string
 ) {
   try {
-    const db = await dbPromise
+    const [db] = await dbPromise
     const response = await getResponseFromQuery(db, query, k, openAIApiKey)
     console.log('Response from query:', response)
   } catch (error) {

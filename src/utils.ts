@@ -16,16 +16,16 @@ export const createDbFromYoutubeVideoUrl = async (
     addVideoInfo: true,
   })
 
-  const transcript = await loader.load()
+  const youtubeInfo = await loader.load()
 
   const textSplitter = new RecursiveCharacterTextSplitter({
     chunkSize: 1000,
     chunkOverlap: 100,
   })
-  const docs = await textSplitter.splitDocuments(transcript)
+  const docs = await textSplitter.splitDocuments(youtubeInfo)
 
   const db = FaissStore.fromDocuments(docs, embeddings)
-  return db
+  return [db, youtubeInfo]
 }
 
 export const getResponseFromQuery = async (
