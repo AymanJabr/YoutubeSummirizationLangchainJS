@@ -14,6 +14,10 @@ pnpm dev
 bun dev
 ```
 
+## Command to test:
+- this is so that we don't have to change the module in tsconfig.json, make sure to have ts-node installed: `npm i -g ts-node`
+- TS_NODE_COMPILER_OPTIONS='{"module":"commonjs"}' ts-node ./src/test-utils.ts
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.

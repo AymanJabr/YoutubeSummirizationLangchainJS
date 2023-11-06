@@ -8,9 +8,9 @@ import { LLMChain } from 'langchain/chains'
 
 const embeddings = new OpenAIEmbeddings()
 
-const createDbFromYoutubeVideoUrl = async (
+export const createDbFromYoutubeVideoUrl = async (
   videoUrl: string
-): Promise<FaissStore> => {
+): Promise<any> => {
   const loader = YoutubeLoader.createFromUrl(videoUrl, {
     language: 'en',
     addVideoInfo: true,
@@ -28,7 +28,7 @@ const createDbFromYoutubeVideoUrl = async (
   return db
 }
 
-const getResponseFromQuery = async (
+export const getResponseFromQuery = async (
   db: FaissStore,
   query: string,
   k: number = 4,
@@ -56,7 +56,7 @@ const getResponseFromQuery = async (
     
     Only use the factual information from the transcript to answer the question.
     
-    If you feel like you don't have enough information to answer the question, say "I don't know".
+    Don't make up any information that isn't in the transcript.
     
     Your answers should be verbose and detailed.
     `,
@@ -64,7 +64,9 @@ const getResponseFromQuery = async (
 
   const chain = new LLMChain({ llm, prompt })
 
-  let response = await chain.run({ question: query, docs: docsPageContent })
-  response = response.replace('\n', '')
-  return [response, docs]
+  console.log('arrived here')
+
+  const response = await chain.call({ question: query, docs: docsPageContent })
+  const responseText = response.text.replace('\n', '')
+  return [responseText, docs]
 }
