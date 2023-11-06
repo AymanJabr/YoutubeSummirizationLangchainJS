@@ -1,10 +1,32 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# YouTube Summarization with Langchain.js
+
+This open-source project leverages Langchain.js to provide a tool for summarizing YouTube videos and an interactive chat feature. It's designed to create concise summaries from YouTube content and allow users to ask questions about the summarized information, making it easier for users to consume and engage with information.
+
+## Features
+
+- Automatically generate summaries from YouTube video transcripts.
+- Interactive chat feature to answer questions using the summarized content.
+- Use advanced NLP provided by Langchain.js for accurate summarization and information retrieval.
+- Open-source for community-driven enhancements and collaborations.
 
 ## Getting Started
 
-First, run the development server:
+Clone the repository and install the dependencies to set up your local development environment:
 
 ```bash
+git clone [https://github.com/AymanJabr/YoutubeSummirizationLangchainJS]
+cd ./youtube-assistant-langchain
+npm install
+# or
+yarn install
+# or
+pnpm install
+# or
+bun install
+```
+## Run the development serve
+
+```
 npm run dev
 # or
 yarn dev
@@ -14,27 +36,27 @@ pnpm dev
 bun dev
 ```
 
-## Command to test:
-- this is so that we don't have to change the module in tsconfig.json, make sure to have ts-node installed: `npm i -g ts-node`
-- TS_NODE_COMPILER_OPTIONS='{"module":"commonjs"}' ts-node ./src/test-utils.ts
+### Visit [TO be added] to view the application in action.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Interactive Chat
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- In addition to summarization, the application provides an interactive chat interface. This allows you to converse with the application, asking specific questions about the YouTube video's content. The application uses the information it has processed from the video transcript to answer your questions in a conversational manner.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Testing the Application
+- To test the createDbFromYoutubeVideoUrl function without affecting the tsconfig.json, run: `TS_NODE_COMPILER_OPTIONS='{"module":"commonjs"}' ts-node ./src/test-utils.ts`
+- Make sure ts-node is installed globally for this to work: `npm i -g ts-node`
 
-## Learn More
+## Contributing
+- Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 
-To learn more about Next.js, take a look at the following resources:
+1) Fork the Project
+2) Create your Feature Branch (git checkout -b feature/AmazingFeature)
+3) Commit your Changes (git commit -m 'Add some AmazingFeature')
+4) Push to the Branch (git push origin feature/AmazingFeature)
+5) Open a Pull Request
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## License
+Distributed under the MIT License. See [LICENSE](https://opensource.org/license/mit/) for more information.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Acknowledgements
+Special thanks to [rishabkumar7](https://github.com/rishabkumar7) for the project inspiration.
