@@ -5,6 +5,12 @@ interface TranscriptAndChatProps {
   loading: boolean;
   transcript: string;
   error: string;
+  onSendChat: () => void;
+  onChatInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChatInputKeyPress: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  chatInput: string;
+  chatLoading: boolean;
+  chatResponse: string;
 }
 
 const TranscriptAndChat: React.FC<TranscriptAndChatProps> = ({
@@ -12,13 +18,19 @@ const TranscriptAndChat: React.FC<TranscriptAndChatProps> = ({
   loading,
   transcript,
   error,
+  onSendChat,
+  onChatInputChange,
+  onChatInputKeyPress,
+  chatInput,
+  chatLoading,
+  chatResponse,
 }) => {
   return (
     <div className="flex flex-row gap-8 flex-1 min-h-0">
+      {/* Transcript Section */}
       <div className="bg-white shadow overflow-hidden rounded-lg flex-1 min-h-0 flex flex-col">
         <div className="p-4 flex-1">
           <h2 className="font-header text-lg text-center">Video&apos;s Transcript</h2>
-          {/* Scrollable container for transcript */}
           <div className="mt-2 overflow-auto text-body scrollbar-thin scrollbar-thumb-primary scrollbar-track-background" style={{ maxHeight: '70vh' }}>
             {loading ? (
               <div className="flex justify-center items-center h-full">
@@ -41,26 +53,38 @@ const TranscriptAndChat: React.FC<TranscriptAndChatProps> = ({
         </div>
       </div>
 
+      {/* Chat Section */}
       <div className="bg-white shadow overflow-hidden rounded-lg flex-1 min-h-0">
         <div className="p-4 flex flex-col">
           <h2 className="font-header text-lg text-center">Chat</h2>
           <div className="mt-2 overflow-auto text-body scrollbar-thin scrollbar-thumb-primary scrollbar-track-background" style={{ maxHeight: '70vh' }}>
-            {/* Chat content */}
+            {chatResponse}
           </div>
-          <div className="mt-2">
+          <div className="mt-2 flex">
             <input
               type="text"
+              value={chatInput}
+              onChange={onChatInputChange}
+              onKeyPress={onChatInputKeyPress}
               placeholder="Ask a question..."
-              className="p-2 border rounded w-full"
-              // Event handlers and state updates for the chat input will be required
+              className="p-2 border rounded flex-grow"
             />
+            <button
+              onClick={onSendChat}
+              className="ml-2 bg-primary text-white p-2 rounded"
+              disabled={chatLoading}
+            >
+              {chatLoading ? (
+                <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+              ) : (
+                <span>&rarr;</span> // This is a simple arrow symbol, replace with an arrow icon if needed
+              )}
+            </button>
           </div>
         </div>
       </div>
     </div>
   );
 };
-
-
 
 export default TranscriptAndChat;
