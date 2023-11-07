@@ -14,8 +14,10 @@ export default async function handler(
   if (req.method === 'POST') {
     try {
       const { videoUrl } = req.body as RequestBody;
-      const data = await createDbFromYoutubeVideoUrl(videoUrl);
-      res.status(200).json({ data });
+      const [dbPromise, info] = await createDbFromYoutubeVideoUrl(videoUrl);
+      const db = await dbPromise
+      console.log('db:', db);
+      res.status(200).json({ db, info });
     } catch (error: any) {
       console.error(error);
       res.status(500).json({ error: 'Error processing request' });

@@ -6,7 +6,8 @@ import { FaissStore } from 'langchain/vectorstores/faiss'
 const App = () => {
   const [youtubeUrl, setYoutubeUrl] = useState<string>('')
   const [apiKey, setApiKey] = useState<string>('')
-  const [error, setError] = useState<string>('')
+  const [OpenAIError, setOpenAIError] = useState<string>('')
+  const [transcriptError, setTranscriptError] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [transcript, setTranscript] = useState<string>('')
   const [chatInput, setChatInput] = useState<string>('')
@@ -19,15 +20,15 @@ const App = () => {
     setYoutubeUrl(url)
     // Check if the API key is not set when YouTube URL is entered
     if (url && !apiKey) {
-      setError('Please add your OpenAI API key to continue.')
+      setOpenAIError('Please add your OpenAI API key to continue.')
     } else {
-      setError('')
+      setOpenAIError('')
     }
   }
 
   const fetchTranscript = async () => {
     setLoading(true)
-    setError('')
+    setTranscriptError('')
     try {
       const response = await fetch('/api/createDbFromYoutubeVideoUrl', {
         method: 'POST',
@@ -37,16 +38,18 @@ const App = () => {
         body: JSON.stringify({ videoUrl: youtubeUrl }),
       })
       if (response.ok) {
-        const { data } = await response.json()
-        const [db, info] = data
-        console.log('data', info)
+        const data = await response.json()
+        console.log("data: ", data)
+        const {db: dbData, info} = data
+        console.log("dbData: ", dbData)
+        setDb(dbData)
         setTranscript(info[0].pageContent)
       } else {
         // Handle errors
-        setError('Failed to fetch transcript. Please try again.')
+        setTranscriptError('Failed to fetch transcript. Please try again.')
       }
     } catch (error) {
-      setError('Failed to fetch transcript. Please try again.')
+      setTranscriptError(`Failed to fetch transcript. ${error}`)
       console.error(error)
     } finally {
       setLoading(false)
@@ -58,12 +61,15 @@ const App = () => {
   }
 
   const sendChat = async () => {
+    console.log("entered in sendChat 1")
+    console.log("db in sendChat: ", db)
     if (!db) {
-      setError('Please fetch the transcript first.')
+      setTranscriptError('Please fetch the transcript first.')
       return
     }
     setChatLoading(true)
     try {
+      console.log("entered in sendChat 2")
       // This is where you would call your new API route
       const response = await fetch('/api/getResponseFromQuery', {
         method: 'POST',
@@ -72,19 +78,22 @@ const App = () => {
         },
         body: JSON.stringify({
           query: chatInput,
-          db,
+          db: db,
           k: 4,
           openAIApiKey: apiKey,
         }),
       })
+
+      console.log("response: ", response)
+
       if (response.ok) {
         const { responseText } = await response.json()
         setChatResponse(responseText)
       } else {
-        setError('Failed to send chat. Please try again.')
+        setOpenAIError('Failed to send chat. Please try again.')
       }
     } catch (error) {
-      setError('Failed to send chat. Please try again.')
+      setOpenAIError(`Failed to send chat. ${error}`)
       console.error(error)
     } finally {
       setChatLoading(false)
@@ -95,6 +104,7 @@ const App = () => {
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (e.key === 'Enter') {
+      console.log("send chat")
       sendChat()
     }
   }
@@ -118,17 +128,22 @@ const App = () => {
             <input
               type='text'
               value={apiKey}
-              onChange={(e) => setApiKey(e.target.value)}
+              onChange={(e) => {
+                if (e.target.value) { 
+                  setOpenAIError('')
+                }
+                setApiKey(e.target.value)
+              }}
               placeholder='Enter OpenAI API Key'
               className='p-2 border rounded flex-1'
             />
           </div>
-          {error && <div className='text-red-600'>{error}</div>}
+          {OpenAIError && <div className='text-red-600'>{OpenAIError}</div>}
           <TranscriptAndChat
             onFetchTranscript={fetchTranscript}
             loading={loading}
             transcript={transcript}
-            error={error}
+            error={transcriptError}
             onSendChat={sendChat}
             onChatInputChange={handleChatInputChange}
             onChatInputKeyPress={handleChatInputKeyPress}

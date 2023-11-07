@@ -34,6 +34,7 @@ export const getResponseFromQuery = async (
   k: number = 4,
   openAIApiKey: string
 ): Promise<[string, any[]]> => {
+  console.log('db in getResponseFromQuery:', db)
   const docs = await db.similaritySearch(query, k)
   const docsPageContent = docs
     .map((d: { pageContent: any }) => d.pageContent)

@@ -7,7 +7,11 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
-      const { query, db, k, openAIApiKey } = req.body
+      const { query, dbPromise, k, openAIApiKey } = req.body
+      console.log("dbPromise in api getResponseFromQuery body:", dbPromise)
+      const db = await dbPromise
+      console.log("db in api getResponseFromQuery body:", db)
+      
       const [responseText, docs] = await getResponseFromQuery(
         db,
         query,
