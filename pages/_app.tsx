@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import TranscriptAndChat from '@/components/transcript-and-chat'
 import '../src/styles/globals.css'
-import { FaissStore } from 'langchain/vectorstores/faiss'
 
 const App = () => {
   const [youtubeUrl, setYoutubeUrl] = useState<string>('')
@@ -13,7 +12,6 @@ const App = () => {
   const [chatInput, setChatInput] = useState<string>('')
   const [chatLoading, setChatLoading] = useState<boolean>(false)
   const [chatResponse, setChatResponse] = useState<string>('')
-  const [db, setDb] = useState<FaissStore | null>(null)
 
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const url = e.target.value
@@ -35,15 +33,13 @@ const App = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ videoUrl: youtubeUrl }),
+        body: JSON.stringify({ videoUrl: youtubeUrl, queryResponseNeeded: false }),
       })
       if (response.ok) {
         const data = await response.json()
-        console.log("data: ", data)
-        const {db: dbData, info} = data
-        console.log("dbData: ", dbData)
-        setDb(dbData)
-        setTranscript(info[0].pageContent)
+        const { transcript } = data
+        setTranscript(transcript[0].pageContent)
+
       } else {
         // Handle errors
         setTranscriptError('Failed to fetch transcript. Please try again.')
@@ -61,30 +57,15 @@ const App = () => {
   }
 
   const sendChat = async () => {
-    console.log("entered in sendChat 1")
-    console.log("db in sendChat: ", db)
-    if (!db) {
-      setTranscriptError('Please fetch the transcript first.')
-      return
-    }
     setChatLoading(true)
     try {
-      console.log("entered in sendChat 2")
-      // This is where you would call your new API route
-      const response = await fetch('/api/getResponseFromQuery', {
+      const response = await fetch('/api/createDbFromYoutubeVideoUrl', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          query: chatInput,
-          db: db,
-          k: 4,
-          openAIApiKey: apiKey,
-        }),
+        body: JSON.stringify({ videoUrl: youtubeUrl, query: chatInput, K: 4, openAIApiKey: apiKey , queryResponseNeeded: true }),
       })
-
-      console.log("response: ", response)
 
       if (response.ok) {
         const { responseText } = await response.json()
@@ -104,7 +85,6 @@ const App = () => {
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (e.key === 'Enter') {
-      console.log("send chat")
       sendChat()
     }
   }
