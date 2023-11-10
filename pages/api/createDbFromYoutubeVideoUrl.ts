@@ -18,7 +18,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === 'POST') {
+  // if (req.method === 'POST') {
     try {
       console.log('Received POST request with body:', req.body)
       const {
@@ -60,8 +60,8 @@ export default async function handler(
         .status(500)
         .json({ error: 'Error processing request', details: error.message })
     }
-  } else {
-    res.setHeader('Allow', ['POST'])
-    res.status(405).end(`Method ${req.method} Not Allowed`)
-  }
+  // } else {
+  //   res.setHeader('Allow', ['POST'])
+  //   res.status(405).end(`Method ${req.method} Not Allowed`)
+  // }
 }
