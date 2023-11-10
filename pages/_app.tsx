@@ -64,7 +64,7 @@ const App = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ videoUrl: youtubeUrl, query: chatInput, K: 4, openAIApiKey: apiKey , queryResponseNeeded: true }),
+        body: JSON.stringify({ videoUrl: youtubeUrl, query: chatInput, k: 4, openAIApiKey: apiKey , queryResponseNeeded: true }),
       })
 
       if (response.ok) {
