@@ -25,7 +25,6 @@ export default async function handler(
         videoUrl,
         query,
         k,
-        openAIApiKey,
         queryResponseNeeded = false,
       } = req.body as RequestBody
 
@@ -42,6 +41,11 @@ export default async function handler(
       console.log('Database promise resolved')
 
       if (queryResponseNeeded) {
+
+        const {
+          openAIApiKey,
+        } = req.body as RequestBody
+
         console.log('Query response is needed, executing getResponseFromQuery')
         const [responseText] = await getResponseFromQuery(
           db,
