@@ -20,6 +20,7 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
+      console.log('Received POST request with body:', req.body)
       const {
         videoUrl,
         query,
@@ -27,25 +28,37 @@ export default async function handler(
         openAIApiKey,
         queryResponseNeeded = false,
       } = req.body as RequestBody
+
+      console.log(
+        'Calling createDbFromYoutubeVideoUrl with videoUrl:',
+        videoUrl
+      )
       const [dbPromise, transcript] = await createDbFromYoutubeVideoUrl(
         videoUrl
       )
+      console.log('Database promise and transcript received')
+
       const db = await dbPromise
+      console.log('Database promise resolved')
 
       if (queryResponseNeeded) {
+        console.log('Query response is needed, executing getResponseFromQuery')
         const [responseText] = await getResponseFromQuery(
           db,
           query,
           k,
           openAIApiKey
         )
+        console.log('Query response received')
         res.status(200).json({ responseText, transcript })
       }
 
       res.status(200).json({ responseText: '', transcript })
     } catch (error: any) {
-      console.error(error)
-      res.status(500).json({ error: 'Error processing request' })
+      console.error('Error in API handler:', error)
+      res
+        .status(500)
+        .json({ error: 'Error processing request', details: error.message })
     }
   } else {
     res.setHeader('Allow', ['POST'])
